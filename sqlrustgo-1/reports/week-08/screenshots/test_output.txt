@@ -1,0 +1,143 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src\lib.rs (target\debug\deps\sqlrustgo_1-3d59e7c17674b0dc.exe)
+
+running 111 tests
+test executor::error::tests::test_exec_error_display ... ok
+test executor::error::tests::test_exec_error_from_storage_error ... ok
+test executor::operators::tests::test_scan_operator_next_first_call ... ok
+test executor::operators::tests::test_project_operator_new ... ok
+test executor::operators::tests::test_scan_operator_new ... ok
+test executor::operators::tests::test_filter_operator_new ... ok
+test parser::lexer::tests::test_empty_string ... ok
+test executor::operators::tests::test_scan_operator_next_second_call ... ok
+test parser::error::tests::test_parse_error_debug ... ok
+test parser::error::tests::test_parse_error_display ... ok
+test parser::error::tests::test_parse_error_is_error_trait ... ok
+test parser::lexer::tests::test_comparison_operators ... ok
+test parser::lexer::tests::test_create_table_statement_tokens ... ok
+test parser::lexer::tests::test_empty_input ... ok
+test parser::lexer::tests::test_keyword_select ... ok
+test parser::lexer::tests::test_eof_at_end ... ok
+test parser::lexer::tests::test_float_literal ... ok
+test parser::lexer::tests::test_identifier_mixed_case ... ok
+test parser::lexer::tests::test_identifier_simple ... ok
+test parser::lexer::tests::test_identifier_with_underscore ... ok
+test parser::lexer::tests::test_insert_statement_tokens ... ok
+test parser::lexer::tests::test_integer_literal ... ok
+test parser::lexer::tests::test_keyword_and_or_not ... ok
+test parser::lexer::tests::test_arithmetic_operators ... ok
+test parser::lexer::tests::test_keyword_case_insensitive ... ok
+test parser::lexer::tests::test_keyword_data_types ... ok
+test parser::lexer::tests::test_keyword_from ... ok
+test parser::lexer::tests::test_keyword_insert_into_values ... ok
+test parser::lexer::tests::test_keyword_null_true_false ... ok
+test parser::lexer::tests::test_keyword_update_set_delete ... ok
+test parser::lexer::tests::test_keyword_where ... ok
+test parser::lexer::tests::test_punctuation ... ok
+test parser::lexer::tests::test_keyword_create_table ... ok
+test parser::lexer::tests::test_string_literal_single_quote ... ok
+test parser::lexer::tests::test_select_statement_tokens ... ok
+test parser::lexer::tests::test_whitespace_only ... ok
+test parser::lexer::tests::test_string_literal_double_quote ... ok
+test parser::parser::tests::test_parse_create_table_data_types ... ok
+test parser::parser::tests::test_parse_empty_input ... ok
+test parser::parser::tests::test_parse_create_table ... ok
+test parser::lexer::tests::test_two_char_operators ... ok
+test parser::parser::tests::test_parse_insert_multi_rows ... ok
+test parser::parser::tests::test_parse_insert_missing_into ... ok
+test parser::parser::tests::test_parse_insert ... ok
+test parser::parser::tests::test_parse_invalid_sql ... ok
+test parser::parser::tests::test_parse_select_without_from ... ok
+test parser::parser::tests::test_parse_select_specific_columns ... ok
+test parser::parser::tests::test_parse_select_with_where ... ok
+test parser::parser::tests::test_parse_simple_select ... ok
+test parser::parser::tests::test_parser_new ... ok
+test parser::token::tests::test_token_debug_clone_partial_eq ... ok
+test parser::token::tests::test_token_display_identifier ... ok
+test parser::token::tests::test_token_display_keyword ... ok
+test parser::token::tests::test_token_display_literal_boolean ... ok
+test parser::token::tests::test_token_display_literal_float ... ok
+test parser::token::tests::test_token_display_literal_int ... ok
+test parser::token::tests::test_token_display_literal_null ... ok
+test parser::token::tests::test_token_display_literal_string ... ok
+test parser::token::tests::test_token_display_operator ... ok
+test parser::token::tests::test_token_display_punctuation ... ok
+test planner::error::tests::test_plan_error_debug ... ok
+test planner::error::tests::test_plan_error_display ... ok
+test planner::logical::tests::test_logical_planner_new ... ok
+test planner::logical::tests::test_plan_non_select ... ok
+test planner::logical::tests::test_plan_select_statement ... ok
+test planner::logical::tests::test_plan_select_with_where ... ok
+test planner::logical::tests::test_plan_select_without_from_errors ... ok
+test planner::physical::tests::test_physical_planner_new ... ok
+test planner::physical::tests::test_plan_projection ... ok
+test planner::physical::tests::test_plan_scan_to_table_scan ... ok
+test planner::physical::tests::test_plan_selection ... ok
+test storage::catalog::tests::test_catalog_new ... ok
+test storage::catalog::tests::test_get_nonexistent_table ... ok
+test storage::catalog::tests::test_list_tables ... ok
+test storage::catalog::tests::test_register_and_get_table ... ok
+test storage::catalog::tests::test_register_overwrite ... ok
+test storage::error::tests::test_storage_error_debug ... ok
+test storage::error::tests::test_storage_error_display ... ok
+test storage::error::tests::test_storage_error_is_error_trait ... ok
+test storage::memory::tests::test_create_table ... ok
+test storage::memory::tests::test_create_table_duplicate ... ok
+test storage::memory::tests::test_delete_nonexistent_table ... ok
+test storage::memory::tests::test_delete_with_predicate ... ok
+test storage::memory::tests::test_memory_storage_new ... ok
+test storage::memory::tests::test_multiple_tables ... ok
+test storage::memory::tests::test_read_empty_table ... ok
+test storage::memory::tests::test_read_nonexistent_table ... ok
+test storage::memory::tests::test_read_with_and_predicate ... ok
+test storage::memory::tests::test_read_with_eq_predicate ... ok
+test storage::memory::tests::test_read_with_gt_predicate ... ok
+test storage::memory::tests::test_read_with_lt_predicate ... ok
+test storage::memory::tests::test_read_with_or_predicate ... ok
+test storage::memory::tests::test_write_and_read ... ok
+test types::error::tests::test_type_error_display ... ok
+test types::schema::tests::test_column_schema_creation ... ok
+test types::schema::tests::test_column_schema_nullable ... ok
+test types::schema::tests::test_data_type_eq ... ok
+test types::schema::tests::test_schema_empty ... ok
+test types::schema::tests::test_schema_get_column ... ok
+test types::schema::tests::test_schema_get_column_by_name ... ok
+test types::schema::tests::test_schema_new ... ok
+test types::schema::tests::test_table_schema_creation ... ok
+test types::value::tests::test_record_batch_add_row ... ok
+test types::value::tests::test_record_batch_new ... ok
+test types::value::tests::test_record_batch_rows_is_slice ... ok
+test types::value::tests::test_value_clone_eq ... ok
+test types::value::tests::test_value_display_boolean ... ok
+test types::value::tests::test_value_display_float ... ok
+test types::value::tests::test_value_display_int ... ok
+test types::value::tests::test_value_display_null ... ok
+test types::value::tests::test_value_display_string ... ok
+
+test result: ok. 111 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\main.rs (target\debug\deps\sqlrustgo_1-348f120e5e1139b0.exe)
+
+running 13 tests
+test models::book::tests::test_book_borrow_success ... ok
+test models::book::tests::test_book_borrow_twice_fails ... ok
+test models::book::tests::test_book_new ... ok
+test models::book::tests::test_book_reborrow_after_return ... ok
+test models::book::tests::test_book_return ... ok
+test models::borrow_record::tests::test_borrow_record_new ... ok
+test models::borrow_record::tests::test_standard_fine_calculator_zero_rate ... ok
+test models::borrow_record::tests::test_fine_calculator_trait_object ... ok
+test models::borrow_record::tests::test_standard_fine_calculator ... ok
+test models::user::tests::test_student_borrow_limit ... ok
+test models::user::tests::test_teacher_creation ... ok
+test models::user::tests::test_user_trait_object ... ok
+test models::user::tests::test_student_creation ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sqlrustgo_1
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
