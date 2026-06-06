@@ -79,6 +79,9 @@ mod tests {
             columns: vec![],
             from: Some("users".to_string()),
             where_clause: None,
+            limit: None,
+            offset: None,
+            order_by: vec![],
         });
 
         let result = planner.plan(stmt);
@@ -100,6 +103,9 @@ mod tests {
             columns: vec![],
             from: Some("users".to_string()),
             where_clause: Some(Expression::Column("id".to_string())),
+            limit: None,
+            offset: None,
+            order_by: vec![],
         });
 
         let result = planner.plan(stmt);
@@ -122,6 +128,9 @@ mod tests {
             columns: vec![],
             from: None,
             where_clause: None,
+            limit: None,
+            offset: None,
+            order_by: vec![],
         });
 
         let result = planner.plan(stmt);

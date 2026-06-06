@@ -74,6 +74,9 @@ impl SqlParser {
             columns,
             from,
             where_clause,
+            limit: None,
+            offset: None,
+            order_by: vec![],
         })
     }
 

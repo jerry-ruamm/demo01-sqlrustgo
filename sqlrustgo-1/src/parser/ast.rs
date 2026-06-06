@@ -12,6 +12,21 @@ pub struct SelectStatement {
     pub columns: Vec<Expression>,
     pub from: Option<String>,
     pub where_clause: Option<Expression>,
+    pub limit: Option<i64>,
+    pub offset: Option<i64>,
+    pub order_by: Vec<OrderByClause>,
+}
+
+#[derive(Debug, Clone)]
+pub struct OrderByClause {
+    pub column: String,
+    pub direction: OrderDirection,
+}
+
+#[derive(Debug, Clone)]
+pub enum OrderDirection {
+    Asc,
+    Desc,
 }
 
 #[derive(Debug, Clone)]

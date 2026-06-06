@@ -97,9 +97,8 @@ impl<'a> Lexer<'a> {
         match upper.as_str() {
             "SELECT" | "FROM" | "WHERE" | "INSERT" | "INTO" | "VALUES" | "UPDATE" | "SET"
             | "DELETE" | "CREATE" | "TABLE" | "AND" | "OR" | "NOT" | "NULL" | "TRUE" | "FALSE"
-            | "INT" | "VARCHAR" | "TEXT" | "BOOLEAN" | "FLOAT" | "PRIMARY" | "KEY" => {
-                Token::Keyword(ident)
-            }
+            | "INT" | "VARCHAR" | "TEXT" | "BOOLEAN" | "FLOAT" | "PRIMARY" | "KEY" | "LIMIT"
+            | "OFFSET" | "ORDER" | "BY" | "ASC" | "DESC" => Token::Keyword(ident),
             _ => Token::Identifier(ident),
         }
     }
@@ -247,6 +246,14 @@ mod tests {
         assert_eq!(tokens[2], Token::Keyword("TEXT".to_string()));
         assert_eq!(tokens[3], Token::Keyword("BOOLEAN".to_string()));
         assert_eq!(tokens[4], Token::Keyword("FLOAT".to_string()));
+    }
+
+    #[test]
+    fn test_keyword_limit_offset() {
+        let mut lexer = Lexer::new("LIMIT OFFSET");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens[0], Token::Keyword("LIMIT".to_string()));
+        assert_eq!(tokens[1], Token::Keyword("OFFSET".to_string()));
     }
 
     #[test]
