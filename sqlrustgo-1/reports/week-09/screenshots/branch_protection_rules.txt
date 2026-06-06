@@ -1,0 +1,27 @@
+=== SQLRustGo 分支保护规则配置方案 ===
+
+【main 分支 - 严格保护】
+Branch name pattern: main
+- Require a pull request before merging: ON
+- Required approving reviews: 2
+- Require status checks to pass: ON
+- Require branches to be up to date: ON
+- Allow force pushes: OFF
+- Allow deletions: OFF
+
+【develop/* 分支 - 中等保护】
+Branch name pattern: develop/*
+- Require a pull request before merging: ON
+- Required approving reviews: 1
+- Require status checks to pass: ON
+- Require branches to be up to date: ON
+- Allow force pushes: OFF
+- Allow deletions: OFF
+
+【feature/* 分支 - 轻度保护】
+Branch name pattern: feature/*
+- Require status checks to pass: ON
+- Allow force pushes: OFF
+- Allow deletions: OFF
+
+配置说明：生产分支最严格，开发分支中等，功能分支最轻量。符合渐进式保护策略。
