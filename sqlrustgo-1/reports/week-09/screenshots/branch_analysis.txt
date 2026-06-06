@@ -1,0 +1,17 @@
+*   8172f7b (HEAD -> feature/week9-lab) fix: resolve merge conflict in parser - use student B limit value
+|\  
+| * 201a016 (develop/v2.6.0) test: simulate student A - add default limit comment
+* | da87eb7 test: simulate student B - add different limit comment
+* | 7287462 chore: create feature branch for week9 lab
+|/  
+* 8eb9e72 (origin/main, main) Initial commit: SQLRustGo demo project
+---
+  develop/v2.6.0
+* feature/week9-lab
+  main
+  remotes/origin/main
+
+冲突模拟记录:
+1. Student A 在 develop/v2.6.0 添加: // Student A: default limit = 10
+2. Student B 在 feature/week9-lab 添加: // Student B: default limit = 100
+3. merge 后产生冲突，手动解决采用 Student B 的值

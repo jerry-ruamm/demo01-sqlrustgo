@@ -1,0 +1,16 @@
+=== SQLRustGo Week-09 测试输出 ===
+
+执行命令: cargo test --all-features
+执行时间: 2026-06-06
+
+--- 库测试 (lib tests) ---
+
+运行 126 个测试 (parser/executor/storage/planner/types):
+test result: ok. 126 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+--- 二进制测试 (bin tests) ---
+
+运行 13 个测试 (models)
+test result: ok. 13 passed; 0 failed
+
+=== 总计: 139 passed, 0 failed ===
