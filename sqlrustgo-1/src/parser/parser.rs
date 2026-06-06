@@ -70,10 +70,63 @@ impl SqlParser {
             None
         };
 
+        // 解析 LIMIT 子句
+        let limit = if self.match_keyword("LIMIT") {
+            match self.next() {
+                Some(Token::Literal(Literal::Int(n))) => Some(n),
+                _ => return Err(ParseError::UnexpectedToken),
+            }
+        } else {
+            None
+        };
+
+        // 解析 OFFSET 子句
+        let offset = if self.match_keyword("OFFSET") {
+            match self.next() {
+                Some(Token::Literal(Literal::Int(n))) => Some(n),
+                _ => return Err(ParseError::UnexpectedToken),
+            }
+        } else {
+            None
+        };
+
+        // 解析 ORDER BY 子句
+        let order_by = if self.match_keyword("ORDER") {
+            self.consume_keyword("BY")?;
+            let mut clauses = Vec::new();
+            loop {
+                let column = match self.next() {
+                    Some(Token::Identifier(c)) => c,
+                    _ => return Err(ParseError::UnexpectedToken),
+                };
+                let direction = if self.match_keyword("DESC") {
+                    OrderDirection::Desc
+                } else {
+                    // ASC 是可选的，不写默认为升序
+                    self.match_keyword("ASC");
+                    OrderDirection::Asc
+                };
+                clauses.push(OrderByClause { column, direction });
+                // 检查是否有逗号（多列排序）
+                match self.peek() {
+                    Some(Token::Comma) => {
+                        self.next();
+                    }
+                    _ => break,
+                }
+            }
+            clauses
+        } else {
+            Vec::new()
+        };
+
         Ok(SelectStatement {
             columns,
             from,
             where_clause,
+            limit,
+            offset,
+            order_by,
         })
     }
 
@@ -298,6 +351,196 @@ mod tests {
         }
     }
 
+    // ========== LIMIT / OFFSET 解析测试 ==========
+
+    #[test]
+    fn test_parse_select_with_limit() {
+        let mut parser = SqlParser::new();
+        let stmt = parser.parse("SELECT * FROM users LIMIT 10").unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.from, Some("users".to_string()));
+                assert_eq!(select.limit, Some(10));
+                assert!(select.offset.is_none());
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_limit_and_offset() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users LIMIT 10 OFFSET 5")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.limit, Some(10));
+                assert_eq!(select.offset, Some(5));
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_offset_no_limit() {
+        let mut parser = SqlParser::new();
+        let stmt = parser.parse("SELECT * FROM users OFFSET 20").unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert!(select.limit.is_none());
+                assert_eq!(select.offset, Some(20));
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_where_and_limit() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users WHERE id LIMIT 5")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert!(select.where_clause.is_some());
+                assert_eq!(select.limit, Some(5));
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_limit_zero() {
+        let mut parser = SqlParser::new();
+        let stmt = parser.parse("SELECT * FROM users LIMIT 0").unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.limit, Some(0));
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_limit_large() {
+        let mut parser = SqlParser::new();
+        let stmt = parser.parse("SELECT * FROM users LIMIT 99999").unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.limit, Some(99999));
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_limit_missing_value() {
+        let mut parser = SqlParser::new();
+        let result = parser.parse("SELECT * FROM users LIMIT");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_parse_select_offset_missing_value() {
+        let mut parser = SqlParser::new();
+        let result = parser.parse("SELECT * FROM users LIMIT 10 OFFSET");
+        assert!(result.is_err());
+    }
+
+    // ========== ORDER BY 解析测试 ==========
+
+    #[test]
+    fn test_parse_select_with_order_by_asc() {
+        let mut parser = SqlParser::new();
+        let stmt = parser.parse("SELECT * FROM users ORDER BY id").unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.order_by.len(), 1);
+                assert_eq!(select.order_by[0].column, "id");
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_order_by_desc() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users ORDER BY name DESC")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.order_by.len(), 1);
+                assert_eq!(select.order_by[0].column, "name");
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_order_by_multi_columns() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users ORDER BY id ASC, name DESC")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.order_by.len(), 2);
+                assert_eq!(select.order_by[0].column, "id");
+                assert_eq!(select.order_by[1].column, "name");
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_where_and_order_by() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users WHERE id ORDER BY name")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert!(select.where_clause.is_some());
+                assert_eq!(select.order_by.len(), 1);
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_limit_and_order_by() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users LIMIT 10 ORDER BY id")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.limit, Some(10));
+                assert_eq!(select.order_by.len(), 1);
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_select_with_limit_offset_and_order_by() {
+        let mut parser = SqlParser::new();
+        let stmt = parser
+            .parse("SELECT * FROM users LIMIT 10 OFFSET 5 ORDER BY name DESC")
+            .unwrap();
+        match stmt {
+            Statement::Select(select) => {
+                assert_eq!(select.limit, Some(10));
+                assert_eq!(select.offset, Some(5));
+                assert_eq!(select.order_by.len(), 1);
+                assert_eq!(select.order_by[0].column, "name");
+            }
+            _ => panic!("Expected SELECT statement"),
+        }
+    }
+
     // ========== INSERT 解析测试 ==========
 
     #[test]
@@ -398,3 +641,4 @@ mod tests {
         assert!(parser.tokens.is_empty());
     }
 }
+// Student A: default limit = 10
